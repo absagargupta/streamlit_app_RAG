@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from src.pdf_processor import load_and_split_pdf
 from src.vector_store import create_vector_store
 from src.rag_pipeline import generate_answer
-
+from src.config import MAX_FILES
 # =========================
 # Load Environment Variables
 # =========================
@@ -54,8 +54,8 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True
 )
 
-if uploaded_files and len(uploaded_files) > 3:
-    st.error("Please upload a maximum of 3 PDFs.")
+if uploaded_files and len(uploaded_files) > MAX_FILES:
+    st.error("Please upload a maximum of "+str(MAX_FILES)+" PDFs.")
     st.stop()
 # =========================
 # Process PDF

@@ -1,6 +1,6 @@
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-
+from src.config import EMBEDDING_MODEL
 
 def create_vector_store(
     documents,
@@ -8,7 +8,7 @@ def create_vector_store(
 ):
 
     embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small",
+        model=EMBEDDING_MODEL,
         api_key=openai_api_key
     )
 

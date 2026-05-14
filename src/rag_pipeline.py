@@ -1,7 +1,10 @@
 from openai import OpenAI
 
 from src.prompts import QA_PROMPT_TEMPLATE
-
+from src.config import (
+    TOP_K_RESULTS,
+    LLM_MODEL, TEMPERATURE
+)
 
 def generate_answer(
     question,
@@ -10,7 +13,7 @@ def generate_answer(
 ):
 
     retriever = vector_store.as_retriever(
-        search_kwargs={"k": 4}
+        search_kwargs={"k": TOP_K_RESULTS}
     )
 
     retrieved_docs = retriever.invoke(question)
@@ -34,14 +37,14 @@ def generate_answer(
     client = OpenAI(api_key=openai_api_key)
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=LLM_MODEL,
         messages=[
             {
                 "role": "user",
                 "content": prompt
             }
         ],
-        temperature=0
+        temperature=TEMPERATURE
     )
 
     answer = response.choices[0].message.content
