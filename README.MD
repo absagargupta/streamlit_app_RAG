@@ -26,6 +26,7 @@ It supports:
 
 - Python 3.11
 - OpenAI API Key
+
 This project requires Python 3.11 due to compatibility requirements with modern LangChain/OpenAI dependencies.
 
 ---
@@ -35,7 +36,7 @@ This project requires Python 3.11 due to compatibility requirements with modern 
 ## 1. Clone Repository
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/absagargupta/streamlit_app_RAG.git
 cd document-qa-app
 ```
 
