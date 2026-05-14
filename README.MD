@@ -64,7 +64,7 @@ chmod +x run.sh
 
 Start the application:
 
-```bash 
+```bash
 ./run.sh
 ```
 
