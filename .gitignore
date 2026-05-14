@@ -6,3 +6,4 @@ _pycache__/
 *.pyc
 app_phase1.py
 venvpy311/
+requirements_old.txt
