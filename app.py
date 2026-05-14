@@ -33,6 +33,20 @@ st.title("📄 Document Q&A App")
 st.write(
     "Upload a PDF and ask questions about it."
 )
+with st.sidebar:
+
+    st.header("About")
+
+    st.write(
+        "This application uses Retrieval-Augmented "
+        "Generation (RAG) to answer questions "
+        "from uploaded PDFs."
+    )
+
+    st.write("Supported:")
+    st.write("- 1 to 3 PDFs")
+    st.write("- Natural language questions")
+    st.write("- Source citations")
 
 uploaded_files = st.file_uploader(
     "Upload PDF documents",

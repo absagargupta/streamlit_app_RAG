@@ -19,11 +19,11 @@ def generate_answer(
         return (
             "I could not find relevant information in the uploaded documents.",
             []
-        )
+        )    
 
     context = "\n\n".join([
-        doc.page_content
-        for doc in retrieved_docs
+        f"Document Chunk {idx + 1}:\n{doc.page_content}"
+        for idx, doc in enumerate(retrieved_docs)
     ])
 
     prompt = QA_PROMPT_TEMPLATE.format(
