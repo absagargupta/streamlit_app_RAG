@@ -1,4 +1,7 @@
 .env
 venv311/
 .venv/
-
+src/__pycache__
+_pycache__/
+*.pyc
+app_phase1.py
