@@ -15,6 +15,12 @@ def generate_answer(
 
     retrieved_docs = retriever.invoke(question)
 
+    if not retrieved_docs:
+        return (
+            "I could not find relevant information in the uploaded documents.",
+            []
+        )
+
     context = "\n\n".join([
         doc.page_content
         for doc in retrieved_docs

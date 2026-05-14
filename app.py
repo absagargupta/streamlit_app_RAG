@@ -34,43 +34,68 @@ st.write(
     "Upload a PDF and ask questions about it."
 )
 
-uploaded_file = st.file_uploader(
-    "Upload PDF",
-    type=["pdf"]
+uploaded_files = st.file_uploader(
+    "Upload PDF documents",
+    type=["pdf"],
+    accept_multiple_files=True
 )
 
+if uploaded_files and len(uploaded_files) > 3:
+    st.error("Please upload a maximum of 3 PDFs.")
+    st.stop()
 # =========================
 # Process PDF
 # =========================
 
-if uploaded_file is not None:
+if uploaded_files:
+
+    current_filenames = sorted(
+        [file.name for file in uploaded_files]
+    )
 
     if (
-        "uploaded_filename"
+        "uploaded_filenames"
         not in st.session_state
-        or st.session_state.uploaded_filename
-        != uploaded_file.name
+        or st.session_state.uploaded_filenames
+        != current_filenames
     ):
 
-        with st.spinner("Processing PDF..."):
+        with st.spinner("Processing PDFs..."):
 
-            with tempfile.NamedTemporaryFile(
-                delete=False,
-                suffix=".pdf"
-            ) as tmp_file:
+            all_documents = []
 
-                tmp_file.write(
-                    uploaded_file.read()
+            for uploaded_file in uploaded_files:
+
+                with tempfile.NamedTemporaryFile(
+                    delete=False,
+                    suffix=".pdf"
+                ) as tmp_file:
+
+                    tmp_file.write(
+                        uploaded_file.read()
+                    )
+
+                    temp_pdf_path = tmp_file.name
+
+                split_documents = (
+                    load_and_split_pdf(
+                        temp_pdf_path
+                    )
                 )
 
-                temp_pdf_path = tmp_file.name
+                for doc in split_documents:
+                    doc.metadata["source"] = uploaded_file.name
 
-            split_documents = load_and_split_pdf(
-                temp_pdf_path
-            )
+
+
+                all_documents.extend(
+                    split_documents
+                )
+
+                os.remove(temp_pdf_path)
 
             vector_store = create_vector_store(
-                split_documents,
+                all_documents,
                 OPENAI_API_KEY
             )
 
@@ -78,16 +103,13 @@ if uploaded_file is not None:
                 vector_store
             )
 
-            st.session_state.uploaded_filename = (
-                uploaded_file.name
+            st.session_state.uploaded_filenames = (
+                current_filenames
             )
 
-            os.remove(temp_pdf_path)
-
         st.success(
-            f"{uploaded_file.name} processed successfully!"
+            f"{len(uploaded_files)} PDFs processed successfully!"
         )
-
 # =========================
 # Question Answering
 # =========================
@@ -113,33 +135,62 @@ if "vector_store" in st.session_state:
             st.subheader("Answer")
 
             st.write(answer)
-
+## Citation
             st.subheader("Sources")
 
-            displayed_sources = set()
-
-            for doc in retrieved_docs:
-
-                source = os.path.basename(
+            unique_sources = sorted(set([
+                (
+                    os.path.basename(
+                        doc.metadata.get(
+                            "source",
+                            "Unknown"
+                        )
+                    ),
                     doc.metadata.get(
-                        "source",
+                        "page",
                         "Unknown"
                     )
                 )
+                for doc in retrieved_docs
+            ]))
 
-                page = doc.metadata.get(
-                    "page",
-                    "Unknown"
+            for source, page in unique_sources:
+
+                st.write(
+                    f"- {source} (Page {page + 1 if isinstance(page, int) else page})"
                 )
+# Retrieval Transparency
+            with st.expander("Retrieved Context"):
 
-                source_text = (
-                    f"- {source} (Page {page + 1})"
-                )
+                for idx, doc in enumerate(
+                    retrieved_docs,
+                    start=1
+                ):
 
-                if source_text not in displayed_sources:
-
-                    st.write(source_text)
-
-                    displayed_sources.add(
-                        source_text
+                    source = os.path.basename(
+                        doc.metadata.get(
+                            "source",
+                            "Unknown"
+                        )
                     )
+
+                    page = doc.metadata.get(
+                        "page",
+                        "Unknown"
+                    )
+
+                    st.markdown(
+                        f"### Chunk {idx}"
+                    )
+
+                    st.write(
+                        f"Source: {source}"
+                    )
+
+                    st.write(
+                        f"Page: {page + 1}"
+                    )
+
+                    st.write(doc.page_content)
+
+                    st.divider()
