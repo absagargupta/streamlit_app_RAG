@@ -174,6 +174,7 @@ document-qa-app/
 - No persistent vector database storage
 - No authentication or multi-user support
 - Retrieval quality may degrade for extremely large documents
+- Only plain text supported as of Now
 
 # Design Decisions
 
