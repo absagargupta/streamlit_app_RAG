@@ -24,25 +24,52 @@ It supports:
 
 # Prerequisites
 
-- Python 3.11
+- Python 3.11 (look at the foot notes for installation of python 3.11)
 - OpenAI API Key
 
 This project requires Python 3.11 due to compatibility requirements with modern LangChain/OpenAI dependencies.
 
 ---
-
 # Quick Start
 
-## 1. Clone Repository
+## 1. Install Python 3.11
+
+### Ubuntu/Debian
 
 ```bash
-git clone https://github.com/absagargupta/streamlit_app_RAG.git
-cd document-qa-app
+sudo apt install python3.11 python3.11-venv
+```
+
+### Fedora
+
+```bash
+sudo dnf install python3.11
+```
+
+### macOS (Homebrew)
+
+```bash
+brew install python@3.11
+```
+
+Verify installation:
+
+```bash
+python3.11 --version
 ```
 
 ---
 
-## 2. Configure Environment Variables
+## 2. Clone Repository
+
+```bash
+git clone https://github.com/absagargupta/streamlit_app_RAG.git
+cd streamlit_app_RAG
+```
+
+---
+
+## 3. Configure Environment Variables
 
 Create a `.env` file using `.env.example`.
 
@@ -54,7 +81,7 @@ OPENAI_API_KEY=your_openai_api_key
 
 ---
 
-## 3. Run Application
+## 4. Run Application
 
 Make the script executable:
 
@@ -70,9 +97,11 @@ Start the application:
 
 The application will start locally at:
 
-```text 
-http://localhost:8501 
+```text
+http://localhost:8501
 ```
+
+---
 
 ## Setup Simplification
 
@@ -196,3 +225,4 @@ Potential future enhancements include:
 - Dockerized deployment
 - Conversation memory
 - Evaluation framework integration
+
